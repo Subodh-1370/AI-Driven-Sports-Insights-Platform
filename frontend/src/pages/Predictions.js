@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { toast } from 'react-hot-toast';
 import { 
   CpuChipIcon, 
   TrophyIcon, 
@@ -49,13 +48,11 @@ const Predictions = () => {
       
       if (result.success) {
         setResults(prev => ({ ...prev, win: result.data }));
-        toast.success('Win probability calculated successfully!');
       } else {
-        toast.error(result.message || 'Prediction failed');
+        console.error('Prediction failed:', result.message);
       }
     } catch (error) {
       console.error('Prediction error:', error);
-      toast.error('Failed to connect to backend');
     } finally {
       setLoading(false);
     }
@@ -76,13 +73,11 @@ const Predictions = () => {
       
       if (result.success) {
         setResults(prev => ({ ...prev, innings: result.data }));
-        toast.success('Innings score predicted successfully!');
       } else {
-        toast.error(result.message || 'Prediction failed');
+        console.error('Prediction failed:', result.message);
       }
     } catch (error) {
       console.error('Prediction error:', error);
-      toast.error('Failed to connect to backend');
     } finally {
       setLoading(false);
     }
@@ -103,13 +98,11 @@ const Predictions = () => {
       
       if (result.success) {
         setResults(prev => ({ ...prev, player: result.data }));
-        toast.success('Player performance predicted successfully!');
       } else {
-        toast.error(result.message || 'Prediction failed');
+        console.error('Prediction failed:', result.message);
       }
     } catch (error) {
       console.error('Prediction error:', error);
-      toast.error('Failed to connect to backend');
     } finally {
       setLoading(false);
     }
@@ -140,7 +133,7 @@ const Predictions = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`bg-gradient-to-br ${getCardStyle()} p-8 rounded-2xl text-white`}
+        className={`bg-gradient-to-br ${getCardStyle()} p-8 rounded-2xl text-white shadow-lg`}
       >
         <div className="flex items-center justify-between mb-4">
           <Icon className="w-8 h-8" />
@@ -192,232 +185,275 @@ const Predictions = () => {
     );
   };
 
-  const PredictionForm = ({ children, title, icon: Icon, onSubmit, loading }) => (
-    <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="glass p-6"
-    >
-      <h3 className="text-xl font-semibold text-white mb-6 flex items-center">
-        <Icon className="w-5 h-5 mr-2 text-blue-400" />
-        {title}
-      </h3>
-      <form onSubmit={onSubmit} className="space-y-4">
-        {children}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full btn-primary flex items-center justify-center space-x-2"
-        >
-          {loading ? (
-            <>
-              <div className="spinner" />
-              <span>Processing...</span>
-            </>
-          ) : (
-            <>
-              <SparklesIcon className="w-4 h-4" />
-              <span>Get Prediction</span>
-            </>
-          )}
-        </button>
-      </form>
-    </motion.div>
-  );
-
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-8"
-      >
-        <h1 className="text-4xl font-bold gradient-text mb-2">
-          🤖 AI Predictions
-        </h1>
-        <p className="text-gray-400 text-lg">
-          Advanced machine learning predictions for cricket analytics
-        </p>
-      </motion.div>
-
-      {/* Tab Navigation */}
-      <div className="flex justify-center mb-8">
-        <div className="glass p-1 rounded-lg">
-          {[
-            { id: 'win', name: 'Win Probability', icon: TrophyIcon },
-            { id: 'innings', name: 'Innings Score', icon: CpuChipIcon },
-            { id: 'player', name: 'Player Performance', icon: UserIcon }
-          ].map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 ${
-                  activeTab === tab.id
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{tab.name}</span>
-              </button>
-            );
-          })}
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b border-gray-200">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
+                <CpuChipIcon className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-800">ML Predictions</h1>
+                <p className="text-sm text-gray-500">AI-powered cricket predictions</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-sm text-gray-600">Models Ready</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Prediction Forms and Results */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Forms */}
-        <div className="space-y-6">
-          {activeTab === 'win' && (
-            <PredictionForm
-              title="Match Win Prediction"
-              icon={TrophyIcon}
-              onSubmit={handleWinPrediction}
-              loading={loading}
-            >
-              <div className="grid grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="Team 1"
-                  value={winForm.team1}
-                  onChange={(e) => setWinForm(prev => ({ ...prev, team1: e.target.value }))}
-                  className="input-field"
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Team 2"
-                  value={winForm.team2}
-                  onChange={(e) => setWinForm(prev => ({ ...prev, team2: e.target.value }))}
-                  className="input-field"
-                  required
-                />
-              </div>
-              <input
-                type="text"
-                placeholder="Venue"
-                value={winForm.venue}
-                onChange={(e) => setWinForm(prev => ({ ...prev, venue: e.target.value }))}
-                className="input-field"
-                required
-              />
-              <select
-                value={winForm.toss_decision}
-                onChange={(e) => setWinForm(prev => ({ ...prev, toss_decision: e.target.value }))}
-                className="input-field"
-              >
-                <option value="bat">Bat First</option>
-                <option value="bowl">Bowl First</option>
-              </select>
-            </PredictionForm>
-          )}
-
-          {activeTab === 'innings' && (
-            <PredictionForm
-              title="Innings Score Prediction"
-              icon={CpuChipIcon}
-              onSubmit={handleInningsPrediction}
-              loading={loading}
-            >
-              <input
-                type="text"
-                placeholder="Batting Team"
-                value={inningsForm.team}
-                onChange={(e) => setInningsForm(prev => ({ ...prev, team: e.target.value }))}
-                className="input-field"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Venue"
-                value={inningsForm.venue}
-                onChange={(e) => setInningsForm(prev => ({ ...prev, venue: e.target.value }))}
-                className="input-field"
-                required
-              />
-              <div>
-                <label className="text-gray-400 text-sm mb-2 block">
-                  Number of Overs: {inningsForm.overs}
-                </label>
-                <input
-                  type="range"
-                  min="5"
-                  max="50"
-                  value={inningsForm.overs}
-                  onChange={(e) => setInningsForm(prev => ({ ...prev, overs: parseInt(e.target.value) }))}
-                  className="w-full"
-                />
-              </div>
-            </PredictionForm>
-          )}
-
-          {activeTab === 'player' && (
-            <PredictionForm
-              title="Player Performance Prediction"
-              icon={UserIcon}
-              onSubmit={handlePlayerPrediction}
-              loading={loading}
-            >
-              <input
-                type="text"
-                placeholder="Player Name"
-                value={playerForm.player_name}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, player_name: e.target.value }))}
-                className="input-field"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Team (Optional)"
-                value={playerForm.team}
-                onChange={(e) => setPlayerForm(prev => ({ ...prev, team: e.target.value }))}
-                className="input-field"
-              />
-            </PredictionForm>
-          )}
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-8">
+        {/* Tab Navigation */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-white rounded-lg shadow-md border border-gray-200 p-1">
+            {[
+              { id: 'win', name: 'Win Probability', icon: TrophyIcon },
+              { id: 'innings', name: 'Innings Score', icon: CpuChipIcon },
+              { id: 'player', name: 'Player Performance', icon: UserIcon }
+            ].map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 ${
+                    activeTab === tab.id
+                      ? 'bg-orange-600 text-white'
+                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.name}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Results */}
-        <div className="space-y-6">
-          {results.win && activeTab === 'win' && (
-            <ResultCard type="win" data={results.win} />
-          )}
-          {results.innings && activeTab === 'innings' && (
-            <ResultCard type="innings" data={results.innings} />
-          )}
-          {results.player && activeTab === 'player' && (
-            <ResultCard type="player" data={results.player} />
-          )}
+        {/* Prediction Forms and Results */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Forms */}
+          <div className="space-y-6">
+            {activeTab === 'win' && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
+              >
+                <h3 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                  <TrophyIcon className="w-5 h-5 mr-2 text-orange-600" />
+                  Match Win Prediction
+                </h3>
+                <form onSubmit={handleWinPrediction} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      placeholder="Team 1"
+                      value={winForm.team1}
+                      onChange={(e) => setWinForm(prev => ({ ...prev, team1: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      required
+                    />
+                    <input
+                      type="text"
+                      placeholder="Team 2"
+                      value={winForm.team2}
+                      onChange={(e) => setWinForm(prev => ({ ...prev, team2: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      required
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Venue"
+                    value={winForm.venue}
+                    onChange={(e) => setWinForm(prev => ({ ...prev, venue: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    required
+                  />
+                  <select
+                    value={winForm.toss_decision}
+                    onChange={(e) => setWinForm(prev => ({ ...prev, toss_decision: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                  >
+                    <option value="bat">Bat First</option>
+                    <option value="bowl">Bowl First</option>
+                  </select>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-orange-600 text-white px-4 py-3 rounded-lg hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center space-x-2"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-r-2 border-white border-t-transparent border-l-transparent"></div>
+                        <span>Processing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <SparklesIcon className="w-4 h-4" />
+                        <span>Get Prediction</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              </motion.div>
+            )}
 
-          {/* Quick Stats */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="glass p-6"
-          >
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-              <ArrowPathIcon className="w-5 h-5 mr-2 text-purple-400" />
-              Model Performance
-            </h3>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-400">Win Prediction Accuracy</span>
-                <span className="text-green-400 font-medium">94.2%</span>
+            {activeTab === 'innings' && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
+              >
+                <h3 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                  <CpuChipIcon className="w-5 h-5 mr-2 text-orange-600" />
+                  Innings Score Prediction
+                </h3>
+                <form onSubmit={handleInningsPrediction} className="space-y-4">
+                  <input
+                    type="text"
+                    placeholder="Batting Team"
+                    value={inningsForm.team}
+                    onChange={(e) => setInningsForm(prev => ({ ...prev, team: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Venue"
+                    value={inningsForm.venue}
+                    onChange={(e) => setInningsForm(prev => ({ ...prev, venue: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    required
+                  />
+                  <div>
+                    <label className="text-gray-700 text-sm mb-2 block">
+                      Number of Overs: {inningsForm.overs}
+                    </label>
+                    <input
+                      type="range"
+                      min="5"
+                      max="50"
+                      value={inningsForm.overs}
+                      onChange={(e) => setInningsForm(prev => ({ ...prev, overs: parseInt(e.target.value) }))}
+                      className="w-full"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-orange-600 text-white px-4 py-3 rounded-lg hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center space-x-2"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-r-2 border-white border-t-transparent border-l-transparent"></div>
+                        <span>Processing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <SparklesIcon className="w-4 h-4" />
+                        <span>Get Prediction</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              </motion.div>
+            )}
+
+            {activeTab === 'player' && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
+              >
+                <h3 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                  <UserIcon className="w-5 h-5 mr-2 text-orange-600" />
+                  Player Performance Prediction
+                </h3>
+                <form onSubmit={handlePlayerPrediction} className="space-y-4">
+                  <input
+                    type="text"
+                    placeholder="Player Name"
+                    value={playerForm.player_name}
+                    onChange={(e) => setPlayerForm(prev => ({ ...prev, player_name: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Team (Optional)"
+                    value={playerForm.team}
+                    onChange={(e) => setPlayerForm(prev => ({ ...prev, team: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-orange-600 text-white px-4 py-3 rounded-lg hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center space-x-2"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-r-2 border-white border-t-transparent border-l-transparent"></div>
+                        <span>Processing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <SparklesIcon className="w-4 h-4" />
+                        <span>Get Prediction</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              </motion.div>
+            )}
+          </div>
+
+          {/* Results */}
+          <div className="space-y-6">
+            {results.win && activeTab === 'win' && (
+              <ResultCard type="win" data={results.win} />
+            )}
+            {results.innings && activeTab === 'innings' && (
+              <ResultCard type="innings" data={results.innings} />
+            )}
+            {results.player && activeTab === 'player' && (
+              <ResultCard type="player" data={results.player} />
+            )}
+
+            {/* Model Performance */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
+            >
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <ArrowPathIcon className="w-5 h-5 mr-2 text-purple-600" />
+                Model Performance
+              </h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Win Prediction Accuracy</span>
+                  <span className="text-green-600 font-medium">94.2%</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Score Prediction Error</span>
+                  <span className="text-blue-600 font-medium">±8.5 runs</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Player Performance R²</span>
+                  <span className="text-purple-600 font-medium">0.892</span>
+                </div>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-400">Score Prediction Error</span>
-                <span className="text-blue-400 font-medium">±8.5 runs</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-400">Player Performance R²</span>
-                <span className="text-purple-400 font-medium">0.892</span>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </div>
