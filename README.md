@@ -97,8 +97,16 @@ AI-Driven-Sports-Insights-Platform/
 └── README.md
 
 3️⃣ Frontend Setup (React)
-cd frontend
-npm install
-npm start
+cd frontend |
+npm install |
+npm start |
 Frontend runs at:
 http://localhost:3000
+
+4️⃣ Backend Setup
+cd backend |
+python app.py |
+Backend runs at:
+http://localhost:8000
+
+
