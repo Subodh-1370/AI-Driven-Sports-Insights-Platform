@@ -41,7 +41,7 @@ try:
         predict_player_performance
     )
     from src.analysis.model_training import train_all_models
-    from backend.mock_data import get_mock_matches, get_mock_deliveries, get_mock_players, get_mock_scraping_results, get_mock_cleaning_results
+    from backend.mock_data import get_mock_matches, get_mock_deliveries, get_mock_players, get_mock_scraping_results, get_mock_cleaning_results, get_cleaning_response, get_mock_transformation_results, get_mock_eda_results
     ANALYSIS_AVAILABLE = True
 except ImportError as e:
     logging.warning(f"Analysis modules not available: {e}")
@@ -360,13 +360,13 @@ async def instant_cleaning():
         time.sleep(0.3)
         
         # Get industry-standard cleaning results
-        from backend.mock_data import get_mock_cleaning_results
-        cleaning_results = get_mock_cleaning_results()
+        from backend.mock_data import get_cleaning_response
+        cleaning_results = get_cleaning_response()
         
         return create_response(
             success=True,
-            data=cleaning_results["data"],
-            message=cleaning_results["message"]
+            data=cleaning_results,
+            message="Data cleaned successfully"
         )
         
     except Exception as e:
@@ -377,47 +377,38 @@ async def instant_cleaning():
 async def instant_transformation():
     """Instant data transformation using mock data"""
     try:
-        # Simulate instant transformation (0.4 seconds)
+        # Simulate instant transformation (0.4 seconds instead of minutes)
         time.sleep(0.4)
+        
+        # Get industry-standard transformation results
+        from backend.mock_data import get_mock_transformation_results
+        transformation_results = get_mock_transformation_results()
         
         return create_response(
             success=True,
-            data={
-                "status": "completed",
-                "transformation_time": "0.4 seconds",
-                "features_created": 24,
-                "strike_rates_calculated": True,
-                "averages_computed": True,
-                "win_ratios_generated": True
-            },
-            message="Data transformed instantly"
+            data=transformation_results["data"],
+            message=transformation_results["message"]
         )
         
     except Exception as e:
         logger.error(f"Transformation error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Transformation failed: {str(e)}")
 
-@app.post("/api/eda/analyze", response_model=PredictionResponse)
-async def instant_eda():
+@app.post("/api/eda/analyze/{analysis_type}", response_model=PredictionResponse)
+async def instant_eda(analysis_type: str):
     """Instant EDA using mock data"""
     try:
-        # Simulate instant EDA (0.6 seconds)
-        time.sleep(0.6)
+        # Simulate instant EDA (0.5 seconds)
+        time.sleep(0.5)
+        
+        # Get industry-standard EDA results
+        from backend.mock_data import get_mock_eda_results
+        eda_results = get_mock_eda_results(analysis_type)
         
         return create_response(
             success=True,
-            data={
-                "status": "completed",
-                "analysis_time": "0.6 seconds",
-                "insights": [
-                    "Top scoring team: India (avg 185 runs)",
-                    "Best venue: Eden Gardens (high scoring)",
-                    "Highest partnership: 156 runs"
-                ],
-                "charts_generated": 8,
-                "correlations_found": 12
-            },
-            message="EDA completed instantly"
+            data=eda_results,
+            message=f"EDA analysis completed for {analysis_type}"
         )
         
     except Exception as e:

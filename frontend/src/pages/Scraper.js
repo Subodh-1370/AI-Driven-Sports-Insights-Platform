@@ -49,7 +49,7 @@ const Scraper = () => {
 
       const data = await res.json();
       
-      // Store the complete scraping response
+      // Store complete scraping response
       setScrapedData(data.data);
       setProgress(100);
       setStatus("completed");

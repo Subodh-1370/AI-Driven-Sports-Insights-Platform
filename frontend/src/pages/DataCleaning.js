@@ -12,10 +12,9 @@ const DataCleaning = () => {
     setStatus("cleaning");
     setProgress(10);
     setError("");
-    setResults(null);
+    // Don't set results to null, keep the default data visible
 
     try {
-      setProgress(30); // Show loading state
       const res = await fetch("http://localhost:8000/api/cleaning/start", {
         method: "POST",
       });
@@ -25,13 +24,12 @@ const DataCleaning = () => {
       setProgress(60);
       const data = await res.json();
 
-      setResults(data);
+      setResults(data.data); // Update with new data from API
       setProgress(100);
       setStatus("completed");
     } catch (err) {
       setStatus("error");
       setError("Cleaning failed. Check backend.");
-      setProgress(0);
     }
   };
 
@@ -85,7 +83,9 @@ const DataCleaning = () => {
           <h2 className="font-semibold mb-4">Cleaning Results</h2>
 
           {!results && (
-            <p className="text-gray-500 text-center py-8">No cleaning results available. Start the cleaning process to see results.</p>
+            <div className="text-center py-8">
+              <p className="text-gray-500">No data processed yet. Click "Start Cleaning" to begin.</p>
+            </div>
           )}
 
           {results && (

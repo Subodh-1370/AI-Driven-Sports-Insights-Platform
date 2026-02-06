@@ -145,7 +145,7 @@ def get_mock_scraping_results():
             "status": "completed",
             "sample_data": {
                 "matches": get_mock_matches()[:2],
-                "players": mock_generator.generate_player_stats()[:2],
+                "players": mock_generator.generate_player_stats()[:5],
                 "deliveries": mock_generator.generate_delivery_data()[:5]
             }
         }
@@ -172,9 +172,67 @@ def get_mock_cleaning_results():
             "data_quality_score": 98.5,
             "sample": [
                 {"player": "Virat Kohli", "runs": 82, "strikeRate": 134.2},
-                {"player": "Rohit Sharma", "runs": 61, "strikeRate": 128.5},
-                {"player": "MS Dhoni", "runs": 45, "strikeRate": 87.3},
-                {"player": "KL Rahul", "runs": 58, "strikeRate": 92.1}
+                {"player": "Rohit Sharma", "runs": 61, "strikeRate": 128.5}
             ]
         }
     }
+
+def get_cleaning_response():
+    """Direct response for frontend - matches expected structure"""
+    return {
+        "beforeRecords": 15234,
+        "removed": 3000,
+        "afterRecords": 12234,
+        "cleaning_time": "0.3 seconds",
+        "status": "completed",
+        "data_quality_score": 98.5,
+        "sample": [
+            {"player": "Virat Kohli", "runs": 82, "strikeRate": 134.2},
+            {"player": "Rohit Sharma", "runs": 61, "strikeRate": 128.5},
+            {"player": "KL Rahul", "runs": 45, "strikeRate": 142.8},
+            {"player": "Suryakumar Yadav", "runs": 38, "strikeRate": 156.3},
+            {"player": "Hardik Pandya", "runs": 29, "strikeRate": 118.7}
+        ]
+    }
+
+def get_mock_eda_results(analysis_type):
+    """Generate realistic EDA results for different analysis types"""
+    time.sleep(0.5)  # Simulate processing time
+    
+    if analysis_type == "overview":
+        return {
+            "total_matches": 156,
+            "total_players": 48,
+            "data_range": "2020-2024",
+            "data_quality": 98.5
+        }
+    elif analysis_type == "scoring":
+        return {
+            "avg_score": 285.6,
+            "highest_score": 264,
+            "avg_strike_rate": 128.5,
+            "total_centuries": 45
+        }
+    elif analysis_type == "bowling":
+        return {
+            "avg_economy": 7.2,
+            "best_bowling": "5/23",
+            "dot_balls_percentage": 38.5,
+            "wickets_per_match": 3.8
+        }
+    elif analysis_type == "venue":
+        return {
+            "total_venues": 24,
+            "highest_avg_score": 312,
+            "lowest_avg_score": 245,
+            "day_night_split": "65/35"
+        }
+    elif analysis_type == "toss":
+        return {
+            "toss_win_percentage": 52.3,
+            "bat_first_win_percentage": 58.7,
+            "field_first_win_percentage": 41.3,
+            "decision_impact": "High"
+        }
+    else:
+        return {}

@@ -1,221 +1,162 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowTrendingUpIcon, PlayIcon } from '@heroicons/react/24/outline';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowTrendingUpIcon } from "@heroicons/react/24/outline";
 
 const DataTransformation = () => {
-  const [isTransforming, setIsTransforming] = useState(false);
-  const [transformationStatus, setTransformationStatus] = useState('ready');
+  const [status, setStatus] = useState("idle");
   const [progress, setProgress] = useState(0);
+  const [results, setResults] = useState(null);
+  const [error, setError] = useState("");
 
-  const transformationSteps = [
-    { name: 'Calculate Strike Rates', status: 'completed', description: 'Batting strike rate calculation' },
-    { name: 'Compute Averages', status: 'completed', description: 'Batting and bowling averages' },
-    { name: 'Win Ratios', status: 'processing', description: 'Team win percentage calculation' },
-    { name: 'Feature Engineering', status: 'pending', description: 'Create advanced features' },
-    { name: 'Data Validation', status: 'pending', description: 'Validate transformed data' }
-  ];
+  const startTransformation = async () => {
+    setStatus("transforming");
+    setProgress(10);
+    setError("");
 
-  const handleStartTransformation = async () => {
-    setIsTransforming(true);
-    setTransformationStatus('processing');
-    setProgress(0);
+    try {
+      const res = await fetch("http://localhost:8000/api/transformation/start", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    // Simulate transformation process
-    for (let i = 0; i <= 100; i += 10) {
-      setProgress(i);
-      await new Promise(resolve => setTimeout(resolve, 200));
+      if (!res.ok) throw new Error("Server error");
+
+      setProgress(60);
+      const data = await res.json();
+
+      // Update results with new data from API
+      setResults(data.data);
+      setProgress(100);
+      setStatus("completed");
+      
+      // Reset after 2 seconds to show completed state
+      setTimeout(() => {
+        setStatus("idle");
+        setProgress(0);
+      }, 2000);
+    } catch (err) {
+      console.error("Transformation error:", err);
+      setStatus("error");
+      setError("Transformation failed. Check backend.");
+      setProgress(0);
     }
-
-    setTransformationStatus('completed');
-    setIsTransforming(false);
   };
 
-  const features = [
-    { name: 'Batting Strike Rate', value: '125.4', unit: 'runs/100 balls' },
-    { name: 'Bowling Economy', value: '7.2', unit: 'runs/over' },
-    { name: 'Team Win Ratio', value: '68.5', unit: '%' },
-    { name: 'Player Form Index', value: '0.82', unit: 'normalized' },
-    { name: 'Venue Advantage', value: '1.15', unit: 'multiplier' },
-    { name: 'Momentum Score', value: '0.76', unit: 'normalized' }
-  ];
+  const badge = {
+    idle: "bg-gray-200",
+    transforming: "bg-purple-200",
+    completed: "bg-green-200",
+    error: "bg-red-200",
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-                <ArrowTrendingUpIcon className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">Data Transformation</h1>
-                <p className="text-sm text-gray-500">Create features (strike rate, averages, win ratios)</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className={`w-2 h-2 rounded-full ${transformationStatus === 'completed' ? 'bg-green-500' : transformationStatus === 'processing' ? 'bg-yellow-500 animate-pulse' : 'bg-gray-400'}`}></div>
-              <span className="text-sm text-gray-600 capitalize">{transformationStatus}</span>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="bg-purple-600 p-2 rounded-lg">
+          <ArrowTrendingUpIcon className="w-6 h-6 text-white" />
         </div>
+        <h1 className="text-2xl font-bold">Data Transformation Pipeline</h1>
       </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Transformation Control */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="lg:col-span-1"
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Control */}
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h2 className="font-semibold mb-4">Feature Engineering</h2>
+          <button
+            onClick={startTransformation}
+            disabled={status === "transforming"}
+            className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700 disabled:bg-gray-400"
           >
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-              <h2 className="text-xl font-bold text-gray-800 mb-6">Transformation Control</h2>
-              
-              <div className="space-y-4">
-                <button
-                  onClick={handleStartTransformation}
-                  disabled={isTransforming}
-                  className={`w-full px-4 py-3 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2 ${
-                    isTransforming
-                      ? 'bg-yellow-600 text-white'
-                      : 'bg-purple-600 hover:bg-purple-700 text-white'
-                  } disabled:bg-gray-400 disabled:cursor-not-allowed`}
-                >
-                  {isTransforming ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-r-2 border-white border-t-transparent border-l-transparent"></div>
-                      <span>Transforming...</span>
-                    </>
-                  ) : (
-                    <>
-                      <PlayIcon className="w-4 h-4" />
-                      <span>Start Transformation</span>
-                    </>
-                  )}
-                </button>
+            {status === "transforming" ? "Processing..." : "Start Transformation"}
+          </button>
 
-                {isTransforming && (
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Progress</span>
-                      <span className="text-purple-600 font-medium">{progress}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-purple-600 h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
+          <div className="mt-4">
+            <div className="w-full bg-gray-200 h-3">
+              <motion.div
+                animate={{ width: `${progress}%` }}
+                className="h-3 bg-purple-600 rounded"
+              />
             </div>
-          </motion.div>
+            <p className="text-sm mt-2">{progress}% completed</p>
+          </div>
 
-          {/* Transformation Steps */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="lg:col-span-2"
-          >
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-              <h2 className="text-xl font-bold text-gray-800 mb-6">Transformation Pipeline</h2>
-              
-              <div className="space-y-3">
-                {transformationSteps.map((step, index) => (
-                  <div key={index} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                    <div className="flex-shrink-0">
-                      {step.status === 'completed' && (
-                        <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                      )}
-                      {step.status === 'processing' && (
-                        <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
-                          <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-                        </div>
-                      )}
-                      {step.status === 'pending' && (
-                        <div className="w-6 h-6 bg-gray-300 rounded-full"></div>
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-800">{step.name}</h3>
-                      <p className="text-sm text-gray-600">{step.description}</p>
-                    </div>
-                    <div className="flex-shrink-0">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        step.status === 'completed' ? 'bg-green-100 text-green-800' :
-                        step.status === 'processing' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
-                        {step.status.toUpperCase()}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+          <span className={`px-3 py-1 rounded text-sm ${badge[status]}`}>
+            {status.toUpperCase()}
+          </span>
+
+          {error && <p className="text-red-600 mt-3">{error}</p>}
         </div>
 
-        {/* Generated Features */}
-        <div className="mt-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
-          >
-            <h2 className="text-xl font-bold text-gray-800 mb-6">Generated Features</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {features.map((feature, index) => (
-                <div key={index} className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                  <h3 className="font-semibold text-purple-800 mb-2">{feature.name}</h3>
-                  <div className="flex items-baseline space-x-1">
-                    <span className="text-2xl font-bold text-purple-600">{feature.value}</span>
-                    <span className="text-sm text-purple-600">{feature.unit}</span>
-                  </div>
+        {/* Results */}
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h2 className="font-semibold mb-4">Transformation Results</h2>
+
+          {status === "transforming" && (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-r-2 border-purple-600 border-t-transparent border-l-transparent mx-auto mb-4"></div>
+              <p className="text-gray-600">Processing transformation...</p>
+            </div>
+          )}
+
+          {!results && status !== "transforming" && (
+            <div className="text-center py-8">
+              <p className="text-gray-500">No data processed yet. Click "Start Transformation" to begin.</p>
+            </div>
+          )}
+
+          {results && status !== "transforming" && (
+            <>
+              <div className="grid grid-cols-2 gap-4 text-center mb-4">
+                <div className="bg-blue-50 p-3 rounded">
+                  <p className="text-xl font-bold">{results.features_created}</p>
+                  <p className="text-sm text-gray-600">Features Created</p>
                 </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+                <div className="bg-green-50 p-3 rounded">
+                  <p className="text-xl font-bold">{results.records_processed}</p>
+                  <p className="text-sm text-gray-600">Records Processed</p>
+                </div>
+              </div>
 
-        {/* Transformation Summary */}
-        <div className="mt-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
-          >
-            <h2 className="text-xl font-bold text-gray-800 mb-6">Transformation Summary</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">15,234</div>
-                <div className="text-sm text-gray-600">Records Processed</div>
+              <div className="grid grid-cols-2 gap-4 text-center mb-4">
+                <div className="bg-purple-50 p-3 rounded">
+                  <p className="text-xl font-bold">{results.data_quality_score}%</p>
+                  <p className="text-sm text-gray-600">Data Quality Score</p>
+                </div>
+                <div className="bg-orange-50 p-3 rounded">
+                  <p className="text-xl font-bold">{results.processing_time}</p>
+                  <p className="text-sm text-gray-600">Processing Time</p>
+                </div>
               </div>
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">24</div>
-                <div className="text-sm text-gray-600">Features Created</div>
+
+              <h3 className="font-semibold mb-2">Engineered Features</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm border">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="border p-2">Player</th>
+                      <th className="border p-2">Strike Rate</th>
+                      <th className="border p-2">Batting Average</th>
+                      <th className="border p-2">Form Index</th>
+                      <th className="border p-2">Momentum Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {results.sample_features.map((player, i) => (
+                      <tr key={i}>
+                        <td className="border p-2 font-medium">{player.player}</td>
+                        <td className="border p-2">{player.strike_rate}</td>
+                        <td className="border p-2">{player.batting_average}</td>
+                        <td className="border p-2">{player.form_index}</td>
+                        <td className="border p-2">{player.momentum_score}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-              <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">98.5%</div>
-                <div className="text-sm text-gray-600">Data Quality</div>
-              </div>
-              <div className="text-center p-4 bg-orange-50 rounded-lg">
-                <div className="text-2xl font-bold text-orange-600">2.3s</div>
-                <div className="text-sm text-gray-600">Processing Time</div>
-              </div>
-            </div>
-          </motion.div>
+            </>
+          )}
         </div>
       </div>
     </div>
