@@ -1,7 +1,3 @@
-"""
-Final Corrected Transformation utilities for cricket analytics pipeline.
-Automatically supports both match_id and match_number.
-"""
 
 from __future__ import annotations
 import os

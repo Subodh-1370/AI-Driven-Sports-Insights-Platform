@@ -1,22 +1,3 @@
-"""
-🏏 Cricket Analytics Backend - FastAPI Server
-=============================================
-Final Year Project 2026 - Cricket Analytics Platform
-
-Author: [Your Name]
-Project: Complete Cricket Analytics Pipeline
-Technology: FastAPI + Python + ML
-
-This is the main backend server that handles:
-1. Data scraping from cricket websites
-2. Data processing and cleaning
-3. ML model predictions
-4. Export functionality
-
-Note: Using mock data for instant demo performance
-Real scraping logic available in src/scraper/
-"""
-
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -29,11 +10,9 @@ import time
 from pathlib import Path
 import logging
 
-# Add project root to path
 ROOT_DIR = Path(__file__).resolve().parents[1]
 sys.path.append(str(ROOT_DIR))
 
-# Import analytics modules
 try:
     from src.analysis.predictions import (
         predict_win_probability, 
@@ -47,63 +26,49 @@ except ImportError as e:
     logging.warning(f"Analysis modules not available: {e}")
     ANALYSIS_AVAILABLE = False
 
-# Initialize FastAPI app
-# This is the main API server for the cricket analytics platform
 app = FastAPI(
-    title="🏏 Cricket Analytics API",
+    title="Cricket Analytics API",
     description="Final Year Project - Complete Cricket Analytics Pipeline with ML Predictions",
     version="2.0.0",
-    docs_url="/api/docs",  # Swagger UI for API documentation
-    redoc_url="/api/redoc" # Alternative documentation
+    docs_url="/api/docs",
+    redoc_url="/api/redoc"
 )
 
-# Configure CORS to allow frontend to connect
-# Important for React frontend running on localhost:3000
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Pydantic Models for API request/response validation
-# These models ensure data consistency and provide API documentation
-
 class WinPredictionRequest(BaseModel):
-    """Request model for win prediction"""
     team1: str = Field(..., description="First team name")
     team2: str = Field(..., description="Second team name")
     venue: str = Field(..., description="Match venue")
     toss_decision: str = Field(..., description="Toss decision (bat/bowl)")
 
 class InningsScoreRequest(BaseModel):
-    """Request model for innings score prediction"""
     team: str = Field(..., description="Batting team name")
     venue: str = Field(..., description="Match venue")
     overs: int = Field(default=20, ge=5, le=50, description="Number of overs")
 
 class ScrapingRequest(BaseModel):
-    """Request model for data scraping"""
     url: str = Field(..., description="URL to scrape")
     source: str = Field(..., description="Data source type")
 
 class PlayerPerformanceRequest(BaseModel):
-    """Request model for player performance prediction"""
     player_name: str = Field(..., description="Player name")
     team: Optional[str] = Field(None, description="Team name (optional)")
 
 class ExportRequest(BaseModel):
-    """Request model for data export"""
     format: str = Field(default="csv", description="Export format")
     type: str = Field(default="matches", description="Data type to export")
 
 class PredictionResponse(BaseModel):
-    """Standard response model for all API endpoints"""
     success: bool
     data: Optional[Dict[str, Any]] = None
     message: str
@@ -116,9 +81,7 @@ class SystemStatus(BaseModel):
     api_version: str
     endpoints: List[str]
 
-# Utility Functions
 def create_response(success: bool, data: Any = None, message: str = "") -> PredictionResponse:
-    """Create standardized API response"""
     from datetime import datetime
     return PredictionResponse(
         success=success,
@@ -128,27 +91,22 @@ def create_response(success: bool, data: Any = None, message: str = "") -> Predi
     )
 
 def check_analysis_available():
-    """Check if analysis modules are available"""
     if not ANALYSIS_AVAILABLE:
         raise HTTPException(
             status_code=503,
             detail="Analysis modules not available. Please check backend configuration."
         )
 
-# API Endpoints
 @app.get("/", response_model=Dict[str, str])
 async def root():
-    """Root endpoint"""
     return {
-        "message": "🏏 Cricket Analytics API",
+        "message": "Cricket Analytics API",
         "version": "2.0.0",
         "docs": "/api/docs"
     }
 
 @app.get("/api/health", response_model=SystemStatus)
 async def health_check():
-    """Health check endpoint"""
-    # Check if models exist
     models_dir = ROOT_DIR / "models"
     models_exist = {
         "win_prediction": (models_dir / "win_prediction_logreg.joblib").exists(),
@@ -172,7 +130,6 @@ async def health_check():
 
 @app.post("/api/predict/win", response_model=PredictionResponse)
 async def predict_win(request: WinPredictionRequest):
-    """Predict match win probability"""
     try:
         check_analysis_available()
         
@@ -202,7 +159,6 @@ async def predict_win(request: WinPredictionRequest):
 
 @app.post("/api/predict/innings-score", response_model=PredictionResponse)
 async def predict_innings(request: InningsScoreRequest):
-    """Predict innings total score"""
     try:
         check_analysis_available()
         
@@ -230,7 +186,6 @@ async def predict_innings(request: InningsScoreRequest):
 
 @app.post("/api/predict/player-performance", response_model=PredictionResponse)
 async def predict_player(request: PlayerPerformanceRequest):
-    """Predict player performance"""
     try:
         check_analysis_available()
         
@@ -258,7 +213,6 @@ async def predict_player(request: PlayerPerformanceRequest):
 
 @app.post("/api/models/train", response_model=PredictionResponse)
 async def train_models(background_tasks: BackgroundTasks):
-    """Train all ML models (background task)"""
     try:
         if not ANALYSIS_AVAILABLE:
             raise HTTPException(
@@ -266,7 +220,6 @@ async def train_models(background_tasks: BackgroundTasks):
                 detail="Analysis modules not available"
             )
         
-        # Run training in background
         def train_task():
             try:
                 results = train_all_models()
@@ -288,9 +241,7 @@ async def train_models(background_tasks: BackgroundTasks):
 
 @app.get("/api/stats/overview", response_model=PredictionResponse)
 async def get_stats_overview():
-    """Get platform statistics overview"""
     try:
-        # Load data for statistics
         data_dir = ROOT_DIR / "data" / "processed"
         matches_file = data_dir / "fact_matches.csv"
         deliveries_file = data_dir / "fact_deliveries.csv"
@@ -330,15 +281,11 @@ async def get_stats_overview():
         logger.error(f"Stats error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to get statistics: {str(e)}")
 
-# Instant Scraping Endpoints
 @app.post("/api/scraper/start", response_model=PredictionResponse)
 async def instant_scraping(request: ScrapingRequest):
-    """Instant data scraping using mock data"""
     try:
-        # Simulate instant scraping (0.5 seconds instead of minutes)
         time.sleep(0.5)
         
-        # Get industry-standard scraping results
         from backend.mock_data import get_mock_scraping_results
         scraping_results = get_mock_scraping_results()
         
@@ -354,12 +301,9 @@ async def instant_scraping(request: ScrapingRequest):
 
 @app.post("/api/cleaning/start", response_model=PredictionResponse)
 async def instant_cleaning():
-    """Instant data cleaning using mock data"""
     try:
-        # Simulate instant cleaning (0.3 seconds instead of minutes)
         time.sleep(0.3)
         
-        # Get industry-standard cleaning results
         from backend.mock_data import get_cleaning_response
         cleaning_results = get_cleaning_response()
         
@@ -375,12 +319,9 @@ async def instant_cleaning():
 
 @app.post("/api/transformation/start", response_model=PredictionResponse)
 async def instant_transformation():
-    """Instant data transformation using mock data"""
     try:
-        # Simulate instant transformation (0.4 seconds instead of minutes)
         time.sleep(0.4)
         
-        # Get industry-standard transformation results
         from backend.mock_data import get_mock_transformation_results
         transformation_results = get_mock_transformation_results()
         
@@ -396,12 +337,9 @@ async def instant_transformation():
 
 @app.post("/api/eda/analyze/{analysis_type}", response_model=PredictionResponse)
 async def instant_eda(analysis_type: str):
-    """Instant EDA using mock data"""
     try:
-        # Simulate instant EDA (0.5 seconds)
         time.sleep(0.5)
         
-        # Get industry-standard EDA results
         from backend.mock_data import get_mock_eda_results
         eda_results = get_mock_eda_results(analysis_type)
         
@@ -417,9 +355,7 @@ async def instant_eda(analysis_type: str):
 
 @app.post("/api/evaluation/run", response_model=PredictionResponse)
 async def instant_evaluation():
-    """Instant model evaluation using mock data"""
     try:
-        # Simulate instant evaluation (0.2 seconds)
         time.sleep(0.2)
         
         return create_response(
@@ -441,12 +377,9 @@ async def instant_evaluation():
 
 @app.post("/api/export", response_model=PredictionResponse)
 async def instant_export(request: ExportRequest):
-    """Instant data export using mock data"""
     try:
-        # Simulate instant export (0.3 seconds)
         time.sleep(0.3)
         
-        # Generate mock export data
         if request.type == "matches":
             data = get_mock_matches()
         elif request.type == "players":
@@ -472,7 +405,6 @@ async def instant_export(request: ExportRequest):
         logger.error(f"Export error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Export failed: {str(e)}")
 
-# Exception Handlers
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc):
     return JSONResponse(
@@ -494,7 +426,6 @@ async def general_exception_handler(request, exc):
         ).dict()
     )
 
-# Run server
 if __name__ == "__main__":
     uvicorn.run(
         "app:app",

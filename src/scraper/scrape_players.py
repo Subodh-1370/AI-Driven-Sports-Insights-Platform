@@ -1,13 +1,4 @@
-"""
-ESPNcricinfo player stats scraper (from match scorecards).
 
-This script is a thin wrapper around the parsing logic in `scrape_matches.py`.
-It focuses on regenerating **players.csv** from a given set of match URLs or
-from a season/series page that lists full-scorecard links.
-
-Outputs (appended):
-- data/raw/players.csv
-"""
 
 from __future__ import annotations
 
@@ -79,11 +70,7 @@ def scrape_players_from_matches(match_urls: List[str], output_dir: str = RAW_DIR
 
 
 def scrape_players(player_index_url: str, output_dir: str = RAW_DIR) -> str:
-    """
-    Backwards-compatible API used by Streamlit:
-    - If `player_index_url` is a season/series page, discover all full-scorecard links.
-    - If it's itself a full-scorecard URL, just scrape that one match.
-    """
+    
     print(f"[scrape_players] Entry URL: {player_index_url}")
 
     if "/full-scorecard" in player_index_url:

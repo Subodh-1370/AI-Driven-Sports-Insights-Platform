@@ -19,21 +19,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
-// Import Heroicons for clean, modern icons
-import {
-  HomeIcon,
-  ChartBarIcon,
-  ArrowTrendingUpIcon,
-  FunnelIcon,
-  DocumentArrowDownIcon,
-  SparklesIcon,
-  BoltIcon
-} from '@heroicons/react/24/outline';
-
-// Import custom components
 import Header from './components/Header';
-
-// Import page components for each pipeline stage
 import Scraper from './pages/Scraper';
 import DataCleaning from './pages/DataCleaning';
 import DataTransformation from './pages/DataTransformation';
@@ -53,7 +39,6 @@ function App() {
       id: 'scraper',
       name: 'Data Collection',
       description: 'Gather sports data from websites, APIs, or datasets',
-      icon: HomeIcon,
       color: 'from-blue-500 to-blue-600',
       status: 'ready'
     },
@@ -61,7 +46,6 @@ function App() {
       id: 'cleaning',
       name: 'Data Cleaning',
       description: 'Remove duplicates, handle missing values, fix formats',
-      icon: FunnelIcon,
       color: 'from-green-500 to-green-600',
       status: 'ready'
     },
@@ -69,7 +53,6 @@ function App() {
       id: 'transformation',
       name: 'Data Transformation',
       description: 'Create features (strike rate, averages, win ratios)',
-      icon: ArrowTrendingUpIcon,
       color: 'from-purple-500 to-purple-600',
       status: 'ready'
     },
@@ -77,7 +60,6 @@ function App() {
       id: 'eda',
       name: 'Exploratory Data Analysis',
       description: 'Visualize trends, distributions, and correlations',
-      icon: ChartBarIcon,
       color: 'from-orange-500 to-orange-600',
       status: 'ready'
     },
@@ -85,7 +67,6 @@ function App() {
       id: 'predictions',
       name: 'Modeling / Analysis',
       description: 'Apply ML algorithms or statistical analysis',
-      icon: SparklesIcon,
       color: 'from-pink-500 to-pink-600',
       status: 'ready'
     },
@@ -93,15 +74,13 @@ function App() {
       id: 'evaluation',
       name: 'Evaluation',
       description: 'Measure accuracy, compare results',
-      icon: BoltIcon,
       color: 'from-red-500 to-red-600',
       status: 'ready'
     },
     {
       id: 'export',
       name: 'Export Results',
-      description: 'Save cleaned data, graphs, and predictions',
-      icon: DocumentArrowDownIcon,
+      description: 'Generate reports and export to various formats',
       color: 'from-indigo-500 to-indigo-600',
       status: 'ready'
     }
@@ -260,11 +239,11 @@ function App() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
                 <div className="text-center group">
                   <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 relative overflow-hidden">
-                    <img 
-                      src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=40&h=40&fit=crop&crop=center" 
-                      alt="Data Visualization" 
-                      className="w-10 h-10 rounded-lg object-cover"
-                    />
+                    <div>
+                      <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                    </div>
                   </div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">Data Visualization</h3>
                   <p className="text-gray-600">Interactive charts and graphs for comprehensive cricket insights</p>
@@ -272,11 +251,11 @@ function App() {
                 
                 <div className="text-center group">
                   <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 relative overflow-hidden">
-                    <img 
-                      src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=40&h=40&fit=crop&crop=center" 
-                      alt="Real-time Processing" 
-                      className="w-10 h-10 rounded-lg object-cover"
-                    />
+                    <div>
+                      <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
                   </div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors">Real-time Processing</h3>
                   <p className="text-gray-600">Lightning-fast data processing with instant results</p>
@@ -284,11 +263,11 @@ function App() {
                 
                 <div className="text-center group">
                   <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 relative overflow-hidden">
-                    <img 
-                      src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=40&h=40&fit=crop&crop=center" 
-                      alt="ML Predictions" 
-                      className="w-10 h-10 rounded-lg object-cover"
-                    />
+                    <div>
+                      <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                    </div>
                   </div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">ML Predictions</h3>
                   <p className="text-gray-600">Advanced machine learning models for accurate predictions</p>
@@ -317,61 +296,61 @@ function App() {
                       onClick={() => handleModuleClick(module.id)}
                       className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-200 hover:border-transparent overflow-hidden"
                     >
-                      {/* Module Header with Gradient and Image */}
+                      {/* Module Header with Animated Icons */}
                       <div className={`bg-gradient-to-br ${module.color} p-8 relative overflow-hidden`}>
                         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
                         <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
                         
-                        {/* Cricket Images for different modules */}
+                        {/* Static Icons for each module */}
                         <div className="relative z-10 flex justify-center">
                           {module.id === 'scraper' && (
-                            <img 
-                              src="https://images.unsplash.com/photo-1551218808-94e220e1942a?w=64&h=64&fit=crop&crop=center" 
-                              alt="Data Collection" 
-                              className="w-16 h-16 rounded-lg object-cover border-2 border-white/30"
-                            />
+                            <div>
+                              <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9 9m9 9H3m9-9v9m0-9L3 21m18-3l-9-9m0 0l-9 9" />
+                              </svg>
+                            </div>
                           )}
                           {module.id === 'cleaning' && (
-                            <img 
-                              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=64&h=64&fit=crop&crop=center" 
-                              alt="Data Cleaning" 
-                              className="w-16 h-16 rounded-lg object-cover border-2 border-white/30"
-                            />
+                            <div>
+                              <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </div>
                           )}
                           {module.id === 'transformation' && (
-                            <img 
-                              src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=64&h=64&fit=crop&crop=center" 
-                              alt="Data Transformation" 
-                              className="w-16 h-16 rounded-lg object-cover border-2 border-white/30"
-                            />
+                            <div>
+                              <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                              </svg>
+                            </div>
                           )}
                           {module.id === 'eda' && (
-                            <img 
-                              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=64&h=64&fit=crop&crop=center" 
-                              alt="Data Analysis" 
-                              className="w-16 h-16 rounded-lg object-cover border-2 border-white/30"
-                            />
+                            <div>
+                              <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                              </svg>
+                            </div>
                           )}
                           {module.id === 'predictions' && (
-                            <img 
-                              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=64&h=64&fit=crop&crop=center" 
-                              alt="ML Predictions" 
-                              className="w-16 h-16 rounded-lg object-cover border-2 border-white/30"
-                            />
+                            <div>
+                              <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                              </svg>
+                            </div>
                           )}
                           {module.id === 'evaluation' && (
-                            <img 
-                              src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=64&h=64&fit=crop&crop=center" 
-                              alt="Model Evaluation" 
-                              className="w-16 h-16 rounded-lg object-cover border-2 border-white/30"
-                            />
+                            <div>
+                              <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </div>
                           )}
                           {module.id === 'export' && (
-                            <img 
-                              src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=64&h=64&fit=crop&crop=center" 
-                              alt="Export Results" 
-                              className="w-16 h-16 rounded-lg object-cover border-2 border-white/30"
-                            />
+                            <div>
+                              <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -422,11 +401,11 @@ function App() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div className="text-center">
                   <div className="bg-white/20 backdrop-blur-lg rounded-2xl p-6 mb-4">
-                    <img 
-                      src="https://images.unsplash.com/photo-1551218808-94e220e1942a?w=48&h=48&fit=crop&crop=center" 
-                      alt="Matches Processed" 
-                      className="w-12 h-12 rounded-lg mx-auto mb-3 object-cover"
-                    />
+                    <div className="mb-3">
+                      <svg className="w-12 h-12 text-white mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
                     <div className="text-3xl font-bold mb-2">15,000+</div>
                     <div className="text-sm opacity-90">Matches Processed</div>
                   </div>
@@ -434,11 +413,11 @@ function App() {
                 
                 <div className="text-center">
                   <div className="bg-white/20 backdrop-blur-lg rounded-2xl p-6 mb-4">
-                    <img 
-                      src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=48&h=48&fit=crop&crop=center" 
-                      alt="Players Analyzed" 
-                      className="w-12 h-12 rounded-lg mx-auto mb-3 object-cover"
-                    />
+                    <div className="mb-3">
+                      <svg className="w-12 h-12 text-white mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 4M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857" />
+                      </svg>
+                    </div>
                     <div className="text-3xl font-bold mb-2">2,500+</div>
                     <div className="text-sm opacity-90">Players Analyzed</div>
                   </div>
@@ -446,11 +425,11 @@ function App() {
                 
                 <div className="text-center">
                   <div className="bg-white/20 backdrop-blur-lg rounded-2xl p-6 mb-4">
-                    <img 
-                      src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=48&h=48&fit=crop&crop=center" 
-                      alt="Predictions Made" 
-                      className="w-12 h-12 rounded-lg mx-auto mb-3 object-cover"
-                    />
+                    <div className="mb-3">
+                      <svg className="w-12 h-12 text-white mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                    </div>
                     <div className="text-3xl font-bold mb-2">98.5%</div>
                     <div className="text-sm opacity-90">Prediction Accuracy</div>
                   </div>
@@ -458,13 +437,13 @@ function App() {
                 
                 <div className="text-center">
                   <div className="bg-white/20 backdrop-blur-lg rounded-2xl p-6 mb-4">
-                    <img 
-                      src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=48&h=48&fit=crop&crop=center" 
-                      alt="System Health" 
-                      className="w-12 h-12 rounded-lg mx-auto mb-3 object-cover"
-                    />
-                    <div className="text-3xl font-bold mb-2">99.9%</div>
-                    <div className="text-sm opacity-90">System Uptime</div>
+                    <div className="mb-3">
+                      <svg className="w-12 h-12 text-white mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div className="text-3xl font-bold mb-2">24/7</div>
+                    <div className="text-sm opacity-90">System Health</div>
                   </div>
                 </div>
               </div>

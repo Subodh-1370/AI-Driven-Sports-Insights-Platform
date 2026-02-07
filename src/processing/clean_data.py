@@ -1,22 +1,6 @@
-"""
-Cleaning routines for ESPNcricinfo scraper outputs.
 
-Reads raw CSVs from input directory:
-  - matches.csv
-  - players.csv
-  - deliveries.csv
+# Cleaning routines for ESPNcricinfo scraper outputs.
 
-Writes cleaned tables into output directory:
-  - matches_clean.csv
-  - players_clean.csv
-  - deliveries_clean.csv
-
-Public API (for ML + Streamlit):
-  - clean_matches(input_path, output_dir)
-  - clean_players(input_path, output_dir)
-  - clean_deliveries(input_path, output_dir)
-  - clean_all(raw_dir, processed_dir)
-"""
 
 from __future__ import annotations
 
@@ -235,17 +219,7 @@ def clean_deliveries(
 
 
 def clean_all(raw_dir: Union[str, Path], processed_dir: Union[str, Path]) -> str:
-    """
-    Clean raw matches, players, deliveries files from data/raw/.
-    Automatically detects correct column names and fixes them.
     
-    Args:
-        raw_dir: Directory containing raw CSV files
-        processed_dir: Directory to save cleaned files
-        
-    Returns:
-        str: Status message indicating success or failure
-    """
     print("🚀 Starting data cleaning process...")
     
     # Convert to Path objects

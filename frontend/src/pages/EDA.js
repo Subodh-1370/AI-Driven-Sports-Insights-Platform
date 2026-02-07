@@ -11,11 +11,11 @@ const EDA = () => {
   const [error, setError] = useState('');
 
   const analysisTypes = [
-    { id: 'overview', name: 'Data Overview', icon: '📊', description: 'Summary statistics and metrics' },
-    { id: 'scoring', name: 'Scoring Analysis', icon: '🏏', description: 'Run distribution and patterns' },
-    { id: 'bowling', name: 'Bowling Analysis', icon: '🎯', description: 'Wicket patterns and economy' },
-    { id: 'venue', name: 'Venue Performance', icon: '🏟️', description: 'Ground-wise statistics' },
-    { id: 'toss', name: 'Toss Impact', icon: '🪙', description: 'Toss decision analysis' }
+    { id: 'overview', name: 'Data Overview', description: 'Summary statistics and metrics' },
+    { id: 'scoring', name: 'Scoring Analysis', description: 'Run distribution and patterns' },
+    { id: 'bowling', name: 'Bowling Analysis', description: 'Wicket patterns and economy' },
+    { id: 'venue', name: 'Venue Performance', description: 'Ground-wise statistics' },
+    { id: 'toss', name: 'Toss Impact', description: 'Toss decision analysis' }
   ];
 
   const handleAnalysis = async (type) => {

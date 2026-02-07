@@ -1,23 +1,4 @@
-"""
-ESPNcricinfo match + player stats scraper.
 
-This script targets **full-scorecard** pages, for example:
-https://www.espncricinfo.com/series/.../full-scorecard
-
-It extracts:
-- Match info: match_id, date, venue, team1, team2, toss_winner, toss_decision, result
-- Player stats: batting & bowling per player per innings
-
-Outputs (appended):
-- data/raw/matches.csv
-- data/raw/players.csv
-
-Key reusable functions:
-- fetch_html(url)
-- parse_match_info(soup, url)
-- parse_player_stats(soup, url)
-- scrape_matches_for_season(season_url, output_dir)
-"""
 
 from __future__ import annotations
 

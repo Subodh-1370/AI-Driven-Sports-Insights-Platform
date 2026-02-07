@@ -1,39 +1,3 @@
-"""
-ESPNcricinfo ball-by-ball (deliveries) scraper.
-
-This module focuses on extracting **ball-by-ball** data from an ESPNcricinfo
-commentary / ball-by-ball page associated with a match. In many cases, the
-URL pattern is similar to:
-
-    https://www.espncricinfo.com/series/.../ball-by-ball-commentary
-
-For convenience, you can also attempt to use some full-scorecard pages if
-they contain a ball-by-ball table, but the main target is the dedicated
-ball-by-ball commentary.
-
-Extracted fields (per delivery):
-- match_id
-- innings
-- over
-- ball_no (ball within over)
-- batting_team
-- bowling_team
-- batsman
-- bowler
-- runs_off_bat
-- extras
-- total_runs
-- wicket_type
-- dismissal_player
-
-Output (appended):
-- data/raw/deliveries.csv
-
-Key helpers:
-- fetch_html(url)
-- parse_ball_by_ball(soup, url)
-- scrape_deliveries_for_matches(match_urls, output_dir)
-"""
 
 from __future__ import annotations
 

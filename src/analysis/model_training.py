@@ -1,21 +1,5 @@
 
 
-"""
-Cricket Analytics - ML Model Training Module
-============================================
-Final Year Project 2026
-
-Author: [Your Name]
-Description: This module contains the ML models for cricket analytics
-             I implemented three main models:
-             1. Win Prediction Model - Predicts match winner
-             2. Innings Score Model - Predicts total runs
-             3. Player Performance Model - Predicts player runs
-
-Note: I learned ML during this project, so some approaches might be basic
-      but they work well for the demo purposes.
-"""
-
 from __future__ import annotations
 from pathlib import Path
 from typing import Dict
@@ -27,7 +11,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-# Define data paths
 PROCESSED_DIR = Path("data/processed")
 MODELS_DIR = Path("models")
 FACT_MATCHES = PROCESSED_DIR / "fact_matches.csv"
@@ -35,93 +18,66 @@ FACT_DELIVERIES = PROCESSED_DIR / "fact_deliveries.csv"
 
 
 def _ensure_dirs() -> None:
-    """Create necessary directories if they don't exist"""
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
 
 def _load_csv(path: Path) -> pd.DataFrame:
-    """Load and clean CSV data"""
     if not path.exists():
         raise FileNotFoundError(f"Required file not found: {path}")
 
     df = pd.read_csv(path)
 
-    # Clean column names
     df.columns = df.columns.str.strip()
 
-    # Remove unnecessary columns
     if "Unnamed: 0" in df.columns:
         df = df.drop(columns=["Unnamed: 0"])
 
-    # Standardize column names
     if "inning" in df.columns and "innings" not in df.columns:
         df = df.rename(columns={"inning": "innings"})
 
     return df
 
 def _normalize_match_id(df: pd.DataFrame) -> pd.DataFrame:
-    """Standardize match ID column across datasets"""
     if "match_id" in df.columns:
         return df
     if "match_number" in df.columns:
         return df.rename(columns={"match_number": "match_id"})
     raise ValueError("Dataset missing match_id or match_number column")
 
-
-# ========================================
-# 1. WIN PREDICTION MODEL
-# ========================================
-# This model predicts which team will win a match
-# I used Logistic Regression because it's simple and interpretable
-# For a real project, I'd use more advanced models
-
 def train_win_prediction_model(matches: pd.DataFrame) -> Dict[str, str]:
     """Train a model to predict match winners"""
     
     matches = _normalize_match_id(matches)
 
-    # Check required columns
     required = {"match_id", "team1", "winner"}
     missing = required - set(matches.columns)
     if missing:
         raise ValueError(f"Missing columns in fact_matches.csv: {missing}")
 
-    # Clean data
     matches = matches.dropna(subset=["match_id", "team1", "winner"]).copy()
     matches["match_id"] = pd.to_numeric(matches["match_id"], errors="coerce")
     matches = matches.dropna(subset=["match_id"])
 
-    # Create target variable (1 if team1 wins, 0 if team2 wins)
     matches["team1_win"] = (
         matches["winner"].str.lower() == matches["team1"].str.lower()
     ).astype(int)
 
-    # Simple features (I know this is basic, but it works for demo)
     X = matches[["match_id"]]
     y = matches["team1_win"]
 
-    # Check if we have both classes
     if y.nunique() < 2:
         raise ValueError("Need both win/loss classes to train win prediction model.")
 
-    # Split data
     X_train, _, y_train, _ = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
 
-    # Train model
     model = LogisticRegression(max_iter=2000)
     model.fit(X_train, y_train)
 
-    # Save model
     path = MODELS_DIR / "win_prediction_logreg.joblib"
     joblib.dump({"model": model, "features": ["match_id"]}, path)
     return {"model_path": str(path)}
-
-
-# -------------------------------------------------
-# 2. INNINGS SCORE MODEL (FULLY FIXED)
-# -------------------------------------------------
 
 def train_innings_score_model(deliveries: pd.DataFrame) -> Dict[str, str]:
 
@@ -133,7 +89,7 @@ def train_innings_score_model(deliveries: pd.DataFrame) -> Dict[str, str]:
     if missing:
         raise ValueError(f"fact_deliveries.csv missing required columns: {missing}")
 
-    # Detect correct runs column
+    runs_col = None
     possible_run_cols = [
         "total_runs",
         "runs_total",
@@ -148,10 +104,8 @@ def train_innings_score_model(deliveries: pd.DataFrame) -> Dict[str, str]:
     if runs_col is None:
         raise ValueError("Deliveries dataset must contain a runs column like total_runs.")
 
-    # Calculate total runs per ball (batsman_runs + extras)
     deliveries["ball_total_runs"] = deliveries["batsman_runs"] + deliveries["extras"]
     
-    # Aggregate runs per innings with team and venue
     inning_totals = (
         deliveries.groupby(["match_id", "innings", "bat_team", "venue"])["ball_total_runs"]
         .sum()
@@ -162,7 +116,6 @@ def train_innings_score_model(deliveries: pd.DataFrame) -> Dict[str, str]:
     if inning_totals.empty:
         raise ValueError("No innings totals could be computed from your dataset.")
 
-    # Create features for team and venue
     inning_totals["team_encoded"] = inning_totals["bat_team"].astype('category').cat.codes
     inning_totals["venue_encoded"] = inning_totals["venue"].astype('category').cat.codes
     
@@ -172,7 +125,6 @@ def train_innings_score_model(deliveries: pd.DataFrame) -> Dict[str, str]:
     model = RandomForestRegressor(n_estimators=350, random_state=42)
     model.fit(X, y)
 
-    # Save encoders for prediction
     team_encoder = {team: idx for idx, team in enumerate(inning_totals["bat_team"].astype('category').cat.categories)}
     venue_encoder = {venue: idx for idx, venue in enumerate(inning_totals["venue"].astype('category').cat.categories)}
 
@@ -184,11 +136,6 @@ def train_innings_score_model(deliveries: pd.DataFrame) -> Dict[str, str]:
         "venue_encoder": venue_encoder
     }, path)
     return {"model_path": str(path)}
-
-
-# -------------------------------------------------
-# 3. PLAYER PERFORMANCE MODEL
-# -------------------------------------------------
 
 def train_player_performance_model(deliveries: pd.DataFrame) -> Dict[str, str]:
 
@@ -228,11 +175,6 @@ def train_player_performance_model(deliveries: pd.DataFrame) -> Dict[str, str]:
     joblib.dump({"model": model, "scaler": scaler, "features": ["total_runs"]}, path)
     return {"model_path": str(path)}
 
-
-# -------------------------------------------------
-# TRAIN ALL
-# -------------------------------------------------
-
 def train_all_models() -> Dict[str, Dict[str, str]]:
     _ensure_dirs()
 
@@ -252,7 +194,6 @@ def train_all_models() -> Dict[str, Dict[str, str]]:
             results[name] = {"error": str(exc)}
 
     return results
-
 
 if __name__ == "__main__":
     print(train_all_models())

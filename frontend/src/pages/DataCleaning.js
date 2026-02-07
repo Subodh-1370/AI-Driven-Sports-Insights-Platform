@@ -12,7 +12,6 @@ const DataCleaning = () => {
     setStatus("cleaning");
     setProgress(10);
     setError("");
-    // Don't set results to null, keep the default data visible
 
     try {
       const res = await fetch("http://localhost:8000/api/cleaning/start", {
@@ -50,7 +49,6 @@ const DataCleaning = () => {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Control */}
         <div className="bg-white p-6 rounded-xl shadow">
           <h2 className="font-semibold mb-4">Processing Control</h2>
           <button
