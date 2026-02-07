@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { SparklesIcon } from '@heroicons/react/24/outline';
 
 const Header = () => {
   return (
@@ -63,14 +62,6 @@ const Header = () => {
             </motion.button>
 
           </nav>
-
-          {/* Status */}
-          <div className="hidden md:flex items-center space-x-3 bg-green-50 px-3 py-1 rounded-full">
-            <SparklesIcon className="w-4 h-4 text-green-600" />
-            <span className="text-sm text-green-700 font-medium">
-              System Ready
-            </span>
-          </div>
 
         </div>
       </div>
