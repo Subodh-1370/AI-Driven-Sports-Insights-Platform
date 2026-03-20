@@ -1,15 +1,9 @@
-"""
-🚀 Mock Data Generator - Instant Data Loading
-Optimized for lightning-fast demo responses
-"""
-
 import json
 import time
 from datetime import datetime
 from typing import Dict, List, Any
 
 class MockDataGenerator:
-    """Generate realistic cricket data instantly for demo purposes"""
     
     def __init__(self):
         self.teams = [
@@ -64,13 +58,12 @@ class MockDataGenerator:
         ]
 
     def generate_delivery_data(self) -> List[Dict]:
-        """Generate ball-by-ball data instantly"""
         deliveries = []
         ball_id = 1
         
         for match_id in range(1, 4):
             for innings in [1, 2]:
-                for over in range(1, 6):  # 5 overs for demo
+                for over in range(1, 6):
                     for ball in range(1, 7):
                         deliveries.append({
                             "match_id": match_id,
@@ -153,8 +146,13 @@ def get_mock_scraping_results():
 
 def get_mock_deliveries() -> List[Dict]:
     """Get mock delivery data instantly"""
-    time.sleep(0.1)  # Simulate minimal processing time
+    time.sleep(0.1)
     return mock_generator.generate_delivery_data()
+
+def get_mock_players() -> List[Dict]:
+    """Get mock player data instantly"""
+    time.sleep(0.1)
+    return mock_generator.generate_player_stats()
 
 def get_mock_cleaning_results():
     """Generate realistic cleaning results for industry-standard response"""
@@ -236,3 +234,51 @@ def get_mock_eda_results(analysis_type):
         }
     else:
         return {}
+
+def get_mock_transformation_results():
+    return {
+        "data": {
+            "features_created": 15,
+            "records_processed": 2500,
+            "data_quality_score": 96.8,
+            "processing_time": "2.3s",
+            "sample_features": [
+                {
+                    "player": "Virat Kohli",
+                    "strike_rate": 138.5,
+                    "batting_average": 52.3,
+                    "form_index": 8.7,
+                    "momentum_score": 92.1
+                },
+                {
+                    "player": "Steve Smith",
+                    "strike_rate": 125.8,
+                    "batting_average": 48.9,
+                    "form_index": 7.2,
+                    "momentum_score": 85.6
+                },
+                {
+                    "player": "Joe Root",
+                    "strike_rate": 118.3,
+                    "batting_average": 45.7,
+                    "form_index": 6.8,
+                    "momentum_score": 78.9
+                },
+                {
+                    "player": "Babar Azam",
+                    "strike_rate": 142.1,
+                    "batting_average": 50.2,
+                    "form_index": 8.3,
+                    "momentum_score": 88.4
+                },
+                {
+                    "player": "Rohit Sharma",
+                    "strike_rate": 135.6,
+                    "batting_average": 44.8,
+                    "form_index": 7.5,
+                    "momentum_score": 82.7
+                }
+            ]
+        },
+        "message": "Data transformation completed successfully"
+    }

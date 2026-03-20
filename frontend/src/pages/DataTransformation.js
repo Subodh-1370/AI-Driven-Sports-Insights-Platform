@@ -21,17 +21,18 @@ const DataTransformation = () => {
         },
       });
 
-      if (!res.ok) throw new Error("Server error");
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Server error: ${res.status} - ${errorText}`);
+      }
 
       setProgress(60);
       const data = await res.json();
 
-      // Update results with new data from API
       setResults(data.data);
       setProgress(100);
       setStatus("completed");
       
-      // Reset after 2 seconds to show completed state
       setTimeout(() => {
         setStatus("idle");
         setProgress(0);
@@ -39,7 +40,7 @@ const DataTransformation = () => {
     } catch (err) {
       console.error("Transformation error:", err);
       setStatus("error");
-      setError("Transformation failed. Check backend.");
+      setError(`Transformation failed: ${err.message}`);
       setProgress(0);
     }
   };

@@ -6,9 +6,12 @@ const Export = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [exportFormat, setExportFormat] = useState('csv');
   const [exportType, setExportType] = useState('matches');
+  const [lastExport, setLastExport] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleExport = async () => {
     setIsExporting(true);
+    setError(null);
     
     try {
       const response = await fetch('http://localhost:8000/api/export', {
@@ -20,17 +23,30 @@ const Export = () => {
         })
       });
       
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `cricket_data_${exportType}.${exportFormat}`;
-        a.click();
-        window.URL.revokeObjectURL(url);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Export failed: ${response.status} - ${errorText}`);
       }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `cricket_data_${exportType}.${exportFormat === 'excel' ? 'xlsx' : exportFormat}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      setLastExport({
+        type: exportType,
+        format: exportFormat,
+        timestamp: new Date().toLocaleTimeString()
+      });
+      
     } catch (error) {
       console.error('Export failed:', error);
+      setError(error.message);
     } finally {
       setIsExporting(false);
     }
@@ -129,6 +145,26 @@ const Export = () => {
                     </>
                   )}
                 </button>
+                
+                {lastExport && (
+                  <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <p className="text-sm text-green-800">
+                        Successfully exported {lastExport.type} as {lastExport.format.toUpperCase()} at {lastExport.timestamp}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                
+                {error && (
+                  <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      <p className="text-sm text-red-800">{error}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
@@ -229,13 +265,13 @@ const Export = () => {
                 <h3 className="font-semibold text-gray-800">Quick Tips</h3>
                 <div className="space-y-2">
                   <div className="p-3 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-blue-800">💡 Use Power BI format for optimized column names and data types</p>
+                    <p className="text-sm text-blue-800">Use Power BI format for optimized column names and data types</p>
                   </div>
                   <div className="p-3 bg-green-50 rounded-lg">
-                    <p className="text-sm text-green-800">📊 Create relationships between match and player data for better insights</p>
+                    <p className="text-sm text-green-800">Create relationships between match and player data for better insights</p>
                   </div>
                   <div className="p-3 bg-purple-50 rounded-lg">
-                    <p className="text-sm text-purple-800">🔄 Refresh data regularly by re-exporting from the platform</p>
+                    <p className="text-sm text-purple-800">Refresh data regularly by re-exporting from the platform</p>
                   </div>
                 </div>
               </div>

@@ -1,7 +1,7 @@
 {
   "name": "cricket-analytics-frontend",
   "version": "2.0.0",
-  "description": "🏏 Modern Cricket Analytics Dashboard",
+  "description": "Modern Cricket Analytics Dashboard",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",

@@ -1,21 +1,3 @@
-/**
- * Cricket Analytics Platform - Main React App
- * ===========================================
- * Final Year Project 2026 - Complete Cricket Analytics Pipeline
- * 
- * Author: [Your Name]
- * Technology: React 18 + Tailwind CSS + Framer Motion
- * 
- * This is the main application component that handles:
- * 1. Module navigation and routing
- * 2. Data pipeline stage management
- * 3. UI state management
- * 4. Integration with FastAPI backend
- * 
- * The app follows a clean data science pipeline flow:
- * Data Collection → Data Cleaning → Data Transformation → EDA → Modeling → Evaluation → Export
- */
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
@@ -29,11 +11,8 @@ import Evaluation from './pages/Evaluation';
 import Export from './pages/Export';
 
 function App() {
-  // State management for active module
   const [activeModule, setActiveModule] = useState(null);
 
-  // Define the 7 data pipeline stages
-  // Each module represents a stage in the data science workflow
   const modules = [
     {
       id: 'scraper',
@@ -88,7 +67,6 @@ function App() {
 
   const handleModuleClick = (moduleId) => {
     setActiveModule(moduleId);
-    console.log(`Module clicked: ${moduleId}`);
   };
 
   const getModuleFeatures = (moduleId) => {
@@ -160,75 +138,64 @@ function App() {
         <>
           <Header />
           
-          {/* Hero Section */}
-<div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden text-white">
+          <div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden text-white">
 
-  {/* Background Image */}
-  <div
-    className="absolute inset-0 bg-cover bg-center"
-    style={{
-      backgroundImage:
-        "url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1920&q=80')"
-    }}
-  ></div>
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage:
+                  "url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1920&q=80')"
+              }}
+            ></div>
 
-  {/* Dark Gradient Overlay */}
-  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/70 to-black/80"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/70 to-black/80"></div>
 
-  {/* Content */}
-  <div className="relative z-10 container mx-auto px-4 text-center py-24">
+            <div className="relative z-10 container mx-auto px-4 text-center py-24">
 
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-    >
-      {/* Icon */}
-      <div className="flex justify-center mb-6">
-  <div className="w-24 h-24 rounded-full bg-white/10 backdrop-blur-lg 
-                  flex items-center justify-center shadow-2xl 
-                  animate-float border border-white/20">
-    
-    <span className="text-5xl">🏏</span>
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <div className="flex justify-center mb-6">
+                  <div className="w-24 h-24 rounded-full bg-white/10 backdrop-blur-lg 
+                                  flex items-center justify-center shadow-2xl 
+                                  animate-float border border-white/20">
+                    
+                    <span className="text-5xl">🏏</span>
 
-  </div>
-</div>
+                  </div>
+                </div>
 
+                <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+                  AI-Driven Sports Insights Platform
+                </h1>
 
-      {/* Title */}
-      <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-        AI-Driven Sports Insights Platform
-      </h1>
+                <p className="text-lg md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto">
+                  Advanced Cricket Analytics Pipeline powered by Machine Learning
+                </p>
 
-      {/* Subtitle */}
-      <p className="text-lg md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto">
-        Advanced Cricket Analytics Pipeline powered by Machine Learning
-      </p>
+                <div className="flex flex-col md:flex-row justify-center gap-6">
+                  <div className="bg-white/10 backdrop-blur-md px-8 py-4 rounded-xl shadow-lg">
+                    <div className="text-3xl font-bold text-blue-400">7</div>
+                    <div className="text-sm text-gray-300">Pipeline Stages</div>
+                  </div>
 
-      {/* Stats */}
-      <div className="flex flex-col md:flex-row justify-center gap-6">
-        <div className="bg-white/10 backdrop-blur-md px-8 py-4 rounded-xl shadow-lg">
-          <div className="text-3xl font-bold text-blue-400">7</div>
-          <div className="text-sm text-gray-300">Pipeline Stages</div>
-        </div>
+                  <div className="bg-white/10 backdrop-blur-md px-8 py-4 rounded-xl shadow-lg">
+                    <div className="text-3xl font-bold text-green-400">50K+</div>
+                    <div className="text-sm text-gray-300">Data Points</div>
+                  </div>
 
-        <div className="bg-white/10 backdrop-blur-md px-8 py-4 rounded-xl shadow-lg">
-          <div className="text-3xl font-bold text-green-400">50K+</div>
-          <div className="text-sm text-gray-300">Data Points</div>
-        </div>
+                  <div className="bg-white/10 backdrop-blur-md px-8 py-4 rounded-xl shadow-lg">
+                    <div className="text-3xl font-bold text-purple-400">95%</div>
+                    <div className="text-sm text-gray-300">Model Accuracy</div>
+                  </div>
+                </div>
 
-        <div className="bg-white/10 backdrop-blur-md px-8 py-4 rounded-xl shadow-lg">
-          <div className="text-3xl font-bold text-purple-400">95%</div>
-          <div className="text-sm text-gray-300">Model Accuracy</div>
-        </div>
-      </div>
+              </motion.div>
+            </div>
+          </div>
 
-    </motion.div>
-  </div>
-</div>
-
-
-          {/* Features Section */}
           <div className="bg-white py-16">
             <div className="container mx-auto px-4">
               <div className="text-center mb-12">
@@ -241,11 +208,13 @@ function App() {
                   <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 relative overflow-hidden">
                     <div>
                       <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">Data Visualization</h3>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
+                    Data Visualization
+                  </h3>
                   <p className="text-gray-600">Interactive charts and graphs for comprehensive cricket insights</p>
                 </div>
                 
@@ -257,7 +226,9 @@ function App() {
                       </svg>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors">Real-time Processing</h3>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors">
+                    Real-time Processing
+                  </h3>
                   <p className="text-gray-600">Lightning-fast data processing with instant results</p>
                 </div>
                 
@@ -269,14 +240,15 @@ function App() {
                       </svg>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">ML Predictions</h3>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">
+                    ML Predictions
+                  </h3>
                   <p className="text-gray-600">Advanced machine learning models for accurate predictions</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Main Content - Enhanced Module Grid */}
           <div className="bg-gray-50 py-16">
             <div className="container mx-auto px-4">
               <div className="text-center mb-12">
@@ -284,7 +256,6 @@ function App() {
                 <p className="text-xl text-gray-600">Complete data science workflow for cricket analytics</p>
               </div>
 
-              {/* Enhanced Module Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16">
                 {modules.map((module, index) => {
                   return (
@@ -296,12 +267,10 @@ function App() {
                       onClick={() => handleModuleClick(module.id)}
                       className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-200 hover:border-transparent overflow-hidden"
                     >
-                      {/* Module Header with Animated Icons */}
                       <div className={`bg-gradient-to-br ${module.color} p-8 relative overflow-hidden`}>
                         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
                         <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
                         
-                        {/* Static Icons for each module */}
                         <div className="relative z-10 flex justify-center">
                           {module.id === 'scraper' && (
                             <div>
@@ -355,14 +324,12 @@ function App() {
                         </div>
                       </div>
                       
-                      {/* Module Content */}
                       <div className="p-6">
                         <h3 className="text-2xl font-bold text-gray-800 mb-3 group-hover:text-blue-600 transition-colors">
                           {module.name}
                         </h3>
                         <p className="text-gray-600 mb-6 leading-relaxed">{module.description}</p>
                         
-                        {/* Module Features */}
                         <div className="space-y-2 mb-6">
                           {getModuleFeatures(module.id).map((feature, idx) => (
                             <div key={idx} className="flex items-center text-sm text-gray-600">
@@ -390,7 +357,6 @@ function App() {
             </div>
           </div>
 
-          {/* Statistics Section */}
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
             <div className="container mx-auto px-4">
               <div className="text-center mb-12">
@@ -450,92 +416,36 @@ function App() {
             </div>
           </div>
 
-          {/* Active Module Display */}
-            {activeModule && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="bg-white rounded-xl shadow-lg p-8 border border-gray-200"
-              >
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                  Currently Active: {modules.find(m => m.id === activeModule)?.name}
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  This module is ready to use. Configure your settings below or navigate to the dedicated page.
-                </p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gray-50 p-6 rounded-lg">
-                    <h4 className="font-semibold text-gray-800 mb-4">Quick Actions</h4>
-                    <div className="space-y-3">
-                      <button className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                        Launch Module
-                      </button>
-                      <button className="w-full bg-gray-600 text-white px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors font-medium">
-                        View Documentation
-                      </button>
-                      <button className="w-full border border-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium">
-                        Configure Settings
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-50 p-6 rounded-lg">
-                    <h4 className="font-semibold text-gray-800 mb-4">Module Status</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between py-2 border-b border-gray-200">
-                        <span className="text-gray-600">API Status</span>
-                        <span className="text-green-600 font-semibold">Connected</span>
-                      </div>
-                      <div className="flex items-center justify-between py-2 border-b border-gray-200">
-                        <span className="text-gray-600">Data Available</span>
-                        <span className="text-green-600 font-semibold">Ready</span>
-                      </div>
-                      <div className="flex items-center justify-between py-2 border-b border-gray-200">
-                        <span className="text-gray-600">Last Updated</span>
-                        <span className="text-gray-800">Just now</span>
-                      </div>
-                      <div className="flex items-center justify-between py-2">
-                        <span className="text-gray-600">Performance</span>
-                        <span className="text-green-600 font-semibold">Optimal</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Module Specific Content */}
-                <div className="mt-8 p-6 bg-blue-50 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-4">Module Information</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-600">7</div>
-                      <div className="text-gray-600">Total Modules</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">100%</div>
-                      <div className="text-gray-600">System Health</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-600">24/7</div>
-                      <div className="text-gray-600">Availability</div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-          {/* Footer */}
-          <footer className="bg-gray-800 text-white py-8 mt-16">
-            <div className="container mx-auto px-4 text-center">
-              <p className="text-gray-400">© 2026 Final Year Project Data Pipeline. All rights reserved.</p>
+          <div className="mt-8 p-6 bg-blue-50 rounded-lg">
+            <h4 className="font-semibold text-gray-800 mb-4">Module Information</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600">7</div>
+                <div className="text-gray-600">Total Modules</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">100%</div>
+                <div className="text-gray-600">System Health</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">24/7</div>
+                <div className="text-gray-600">Availability</div>
+              </div>
             </div>
-          </footer>
-        </>
-      ) : (
-        renderModulePage()
+          </div>
       )}
-    </div>
-  );
+
+      <footer className="bg-gray-800 text-white py-8 mt-16">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-gray-400">&copy; 2026 Final Year Project Data Pipeline. All rights reserved.</p>
+        </div>
+      </footer>
+    </>
+  ) : (
+    renderModulePage()
+  )}
+</div>
+);
 }
 
 export default App;

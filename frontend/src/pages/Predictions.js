@@ -11,24 +11,25 @@ import {
 const Predictions = () => {
   const [activeTab, setActiveTab] = useState('win');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Form states
   const [winForm, setWinForm] = useState({
-    team1: 'Team A',
-    team2: 'Team B',
-    venue: 'Neutral Venue',
+    team1: 'India',
+    team2: 'Australia',
+    venue: 'Lord\'s, London',
     toss_decision: 'bat'
   });
 
   const [inningsForm, setInningsForm] = useState({
-    team: 'Team A',
-    venue: 'Neutral Venue',
+    team: 'India',
+    venue: 'Lord\'s, London',
     overs: 20
   });
 
   const [playerForm, setPlayerForm] = useState({
-    player_name: 'Sample Player',
-    team: ''
+    player_name: 'Virat Kohli',
+    team: 'India'
   });
 
   const [results, setResults] = useState({});
@@ -36,6 +37,7 @@ const Predictions = () => {
   const handleWinPrediction = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     
     try {
       const response = await fetch('http://localhost:8000/api/predict/win', {
@@ -44,15 +46,21 @@ const Predictions = () => {
         body: JSON.stringify(winForm)
       });
       
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Prediction failed: ${response.status} - ${errorText}`);
+      }
+      
       const result = await response.json();
       
       if (result.success) {
         setResults(prev => ({ ...prev, win: result.data }));
       } else {
-        console.error('Prediction failed:', result.message);
+        setError(result.message || 'Prediction failed');
       }
     } catch (error) {
       console.error('Prediction error:', error);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -61,6 +69,7 @@ const Predictions = () => {
   const handleInningsPrediction = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     
     try {
       const response = await fetch('http://localhost:8000/api/predict/innings-score', {
@@ -69,15 +78,21 @@ const Predictions = () => {
         body: JSON.stringify(inningsForm)
       });
       
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Prediction failed: ${response.status} - ${errorText}`);
+      }
+      
       const result = await response.json();
       
       if (result.success) {
         setResults(prev => ({ ...prev, innings: result.data }));
       } else {
-        console.error('Prediction failed:', result.message);
+        setError(result.message || 'Prediction failed');
       }
     } catch (error) {
       console.error('Prediction error:', error);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -86,6 +101,7 @@ const Predictions = () => {
   const handlePlayerPrediction = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     
     try {
       const response = await fetch('http://localhost:8000/api/predict/player-performance', {
@@ -94,15 +110,21 @@ const Predictions = () => {
         body: JSON.stringify(playerForm)
       });
       
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Prediction failed: ${response.status} - ${errorText}`);
+      }
+      
       const result = await response.json();
       
       if (result.success) {
         setResults(prev => ({ ...prev, player: result.data }));
       } else {
-        console.error('Prediction failed:', result.message);
+        setError(result.message || 'Prediction failed');
       }
     } catch (error) {
       console.error('Prediction error:', error);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -303,6 +325,15 @@ const Predictions = () => {
                       </>
                     )}
                   </button>
+                  
+                  {error && activeTab === 'win' && (
+                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <p className="text-sm text-red-800">{error}</p>
+                      </div>
+                    </div>
+                  )}
                 </form>
               </motion.div>
             )}
@@ -364,6 +395,15 @@ const Predictions = () => {
                       </>
                     )}
                   </button>
+                  
+                  {error && activeTab === 'innings' && (
+                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <p className="text-sm text-red-800">{error}</p>
+                      </div>
+                    </div>
+                  )}
                 </form>
               </motion.div>
             )}
@@ -411,6 +451,15 @@ const Predictions = () => {
                       </>
                     )}
                   </button>
+                  
+                  {error && activeTab === 'player' && (
+                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <p className="text-sm text-red-800">{error}</p>
+                      </div>
+                    </div>
+                  )}
                 </form>
               </motion.div>
             )}
