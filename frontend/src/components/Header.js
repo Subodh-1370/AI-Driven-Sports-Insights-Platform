@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  SunIcon, 
-  MoonIcon, 
-  ArrowLeftIcon,
-  HomeIcon 
-} from '@heroicons/react/24/outline';
+import { SunIcon, MoonIcon, ArrowLeftIcon, HomeIcon } from '@heroicons/react/24/outline';
 
 const Header = () => {
   const [isDark, setIsDark] = useState(false);
   const [showBackButton, setShowBackButton] = useState(false);
-  const [currentPath, setCurrentPath] = useState('/');
 
   useEffect(() => {
     // Check for saved theme preference
@@ -22,7 +16,6 @@ const Header = () => {
 
     // Check current path for back button
     const path = window.location.pathname;
-    setCurrentPath(path);
     setShowBackButton(path !== '/' && path !== '/dashboard');
   }, []);
 
@@ -42,11 +35,7 @@ const Header = () => {
   };
 
   const handleBack = () => {
-    if (currentPath !== '/') {
-      window.history.back();
-    } else {
-      window.location.href = '/dashboard';
-    }
+    window.history.back();
   };
 
   const handleHome = () => {
@@ -125,16 +114,7 @@ const Header = () => {
                 <span>Dashboard</span>
               </motion.button>
 
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                className={`transition font-medium ${
-                  isDark 
-                    ? 'text-gray-300 hover:text-blue-400' 
-                    : 'text-gray-600 hover:text-blue-600'
-                }`}
-              >
-              </motion.button>
-            </nav>
+              </nav>
 
             {/* Theme Toggle */}
             <motion.button
